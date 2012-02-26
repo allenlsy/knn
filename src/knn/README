@@ -1,0 +1,31 @@
+1. To compile the project
+
+"javac -d . *.java"
+
+OR
+
+"sh comp"
+
+
+2. Run 
+
+Type "java knn.Main" to view the command line help message
+
+3. Report
+
+Report is in prediction.txt.
+
+4. Some Examples
+
+> sh comp
+> java knn.Main
+> java knn.Main knn 
+> java knn.Main knn dna 5 0
+> java knn.Main knn dna.train.txt dna.test.txt 5 0
+> java knn.Main lsh dna 10 10 5 0
+> java knn.Main lsh dna 10 10 5 0 5 5
+> java knn.Main lsh dna 10 10 5 0 5 5 d
+
+
+-----------------------------------------------------------
+For any further information, please email cafe@allenlsy.com   
