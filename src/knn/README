@@ -1,3 +1,13 @@
+Download the latest source code from:
+https://github.com/allenlsy/knn/zipball/master
+	
+This is a eclipse project. You can open the whole project with eclipse using Java project
+wizard.
+
+To run the program, please ensure that JDK and JRE is correctly configured on your 
+computer. Then go to the /src/knn directory in command line(in Windows) or terminal(in 
+Unix-based OS).
+
 1. To compile the project
 
 "javac -d . *.java"
