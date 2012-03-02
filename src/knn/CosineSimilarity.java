@@ -3,7 +3,7 @@ package knn;
 public class CosineSimilarity implements Metric {
 	/**
 	 * Cos(r1, r2) 	= (r1.*r2) / |r1|*|r2|
- 			= ( sigma(r1*r2) ) / ( sigma(r1^2) * sigma(r2^2) ) 
+ 			= ( sigma(r1*r2) ) / sqrt( sigma(r1^2) * sigma(r2^2) ) 
 	 */
 	
 	@Override
@@ -24,7 +24,7 @@ public class CosineSimilarity implements Metric {
 			nr2 += r2v * r2v;
 		}
 		
-		denominator = Math.sqrt(nr1) * Math.sqrt(nr2);
+		denominator = Math.sqrt(nr1 * nr2);
 		
 		return nominator / denominator;
 	}
