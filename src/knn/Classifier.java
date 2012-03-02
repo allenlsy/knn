@@ -15,6 +15,7 @@ public abstract class Classifier {
 	protected List<Record> testDS;
 	protected Metric metric = null; // similarity calculation metric
 	protected int kValue; // k value
+	protected int dimension;
 	
 
 	/**
@@ -140,6 +141,8 @@ public abstract class Classifier {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		
+		dimension = ret;
 		
 		return ret;
 	}

@@ -59,6 +59,7 @@ public class Main {
 			for (int i = 0; i < classifierArgs.length; i++)
 				classifierArgs[i] = args[i+1];			
 			classifier.initialize(classifierArgs);
+			Main.DEBUG("Dimension: " + classifier.dimension);
 			timeEnd = System.currentTimeMillis();
 			Main.DEBUG("Time used(ms): " + (timeEnd - timeStart) );
 			System.out.println();
