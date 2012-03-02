@@ -91,7 +91,6 @@ public class Main {
 		 */
 		// classifier.createDataset();
 		System.out.println("Testing data...");
-		Main.DEBUG("Testing Dataset size: " + classifier.testDS.size());		
 		timeStart = System.currentTimeMillis();
 		double accuracy = -1;
 		try {
@@ -104,8 +103,8 @@ public class Main {
 		testingTime = timeEnd-timeStart;
 		// report
 		System.out.printf("  Accuracy: %.2f%%\n", accuracy );
-		System.out.println("  Time used:(ms): " + testingTime );
-		Main.DEBUG("Training Dataset size: " + classifier.trainDS.size());
+		System.out.println("  Time used:(ms): " + (testingTime+trainingTime) );
+		Main.DEBUG("Testing Dataset size: " + classifier.testDS.size());
 		Main.DEBUG("Testing Time/record: " + 
 				(double)testingTime / classifier.trainDS.size());
 		System.out.println();
