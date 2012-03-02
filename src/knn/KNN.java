@@ -2,9 +2,11 @@ package knn;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.LinkedList;
 import java.util.StringTokenizer;
+import java.util.Map.Entry;
 
 
 /**
@@ -15,35 +17,44 @@ public class KNN extends Classifier{
 		
 	@Override
 	public int classify(Record record) {
-		
+		int ret = -1;
 		/* Compute all the similarities */
 
 		// list<instance id, similarity>, used to store the calculated similarity among 
 		//   the data in the dataset
-		List< Pair<Integer, Double> > list = new LinkedList<Pair<Integer,Double>>();   
+		List< Pair<Integer, Double> > candidates = new LinkedList<Pair<Integer,Double>>();   
 		for (Record trained : trainDS)
 		{
 			double similarity = metric.compute(trained, record);
-			list.add( new Pair<Integer, Double> (trained.label, similarity) );
+			candidates.add( new Pair<Integer, Double> (trained.label, similarity) );
 		}
 		
 		/* sort the similarities */
-		Collections.sort(list);
+		Collections.sort(candidates);
 				
 		/* get the most frequent label of the top k records */
-		int stats[] = new int[30];	// @SuppressWarnings("unchecked")
+		HashMap<Integer, Integer> stats = new HashMap<Integer, Integer>();
 
-		for (int i = 0;i<kValue;i++)
-			stats[ list.get(i).key ]++;
-		int max = 0, res = 0;
-		for (int i = 0; i<30;i++)
-			if (stats[i]>max)
+		int arrayLength = Math.min(kValue, candidates.size() );
+		for (int i = 0; i < arrayLength; i++)
+		{
+			int thisLabel = candidates.get(i).key; // thisLabel is the label of current examining record		
+			if ( !stats.containsKey(thisLabel) )
+				stats.put(thisLabel, 0);
+			int temp = stats.get( thisLabel ) ;
+			stats.put( thisLabel, temp + 1);
+		}
+		int max = 0;
+		for (Entry<Integer, Integer> entry: stats.entrySet() )
+		{
+			if ( entry.getValue() > max)
 			{
-				max = stats[i];
-				res = i;
+				max = entry.getValue();
+				ret = entry.getKey(); 
 			}
+		}
 		
-		return res;
+		return ret;
 	}
 	
 	@Override
