@@ -5,11 +5,11 @@ package knn;
  *
  */
 public class Record {
-	public int label;
+	public String label;
 	public double[] attributes = null;
-	public Record (int _label, double[] _data)
+	public Record (String label2, double[] _data)
 	{
-		label = _label;
+		label = label2;
 		attributes = _data;
 	}
 	

@@ -16,36 +16,41 @@ import java.util.Map.Entry;
 public class KNN extends Classifier{
 		
 	@Override
-	public int classify(Record record) {
-		int ret = -1;
+	public String classify(Record record) {
+		String ret = null;
 		/* Compute all the similarities */
 
 		// list<instance id, similarity>, used to store the calculated similarity among 
 		//   the data in the dataset
-		List< Pair<Integer, Double> > candidates = new LinkedList<Pair<Integer,Double>>();   
+		List< Pair<String, Double> > candidates = new LinkedList<Pair<String,Double>>();   
 		for (Record trained : trainDS)
 		{
 			double similarity = metric.compute(trained, record);
-			candidates.add( new Pair<Integer, Double> (trained.label, similarity) );
+			candidates.add( new Pair<String, Double> (trained.label, similarity) );
 		}
 		
 		/* sort the similarities */
+		/*
+		 * 2) For each of the retrieved point, compute the distance from q to it, and report 
+		 * 	the point if it is a correct answer (cR-near neighbor for Strategy 1, R-near neighbor 
+		 * 	for Strategy 2).
+		 */
 		Collections.sort(candidates);
-				
+		
 		/* get the most frequent label of the top k records */
-		HashMap<Integer, Integer> stats = new HashMap<Integer, Integer>();
+		HashMap<String, Integer> stats = new HashMap<String, Integer>();
 
 		int arrayLength = Math.min(kValue, candidates.size() );
 		for (int i = 0; i < arrayLength; i++)
 		{
-			int thisLabel = candidates.get(i).key; // thisLabel is the label of current examining record		
+			String thisLabel = candidates.get(i).key; // thisLabel is the label of current examining record		
 			if ( !stats.containsKey(thisLabel) )
 				stats.put(thisLabel, 0);
 			int temp = stats.get( thisLabel ) ;
 			stats.put( thisLabel, temp + 1);
 		}
 		int max = 0;
-		for (Entry<Integer, Integer> entry: stats.entrySet() )
+		for (Entry<String, Integer> entry: stats.entrySet() )
 		{
 			if ( entry.getValue() > max)
 			{
@@ -53,7 +58,7 @@ public class KNN extends Classifier{
 				ret = entry.getKey(); 
 			}
 		}
-		
+				
 		return ret;
 	}
 	
@@ -98,7 +103,7 @@ public class KNN extends Classifier{
 				
 				line = br.readLine();
 				words = line.split(" ");
-				int label = new Integer(words[0]);
+				String label = words[0];
 				for (int i=1;i<words.length;i++)
 				{
 					word = words[i];

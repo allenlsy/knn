@@ -10,8 +10,8 @@ package knn;
 public class LSHRecord extends Record {
 	public String hamming;
 	// private int M; // M: the max value of attribute in the dataset
-	public LSHRecord(int _label, double[] _data, int _M) {
-		super(_label, _data);
+	public LSHRecord(String label, double[] _data, int _M) {
+		super(label, _data);
 
 		/*
 		 * Calculate Hamming string

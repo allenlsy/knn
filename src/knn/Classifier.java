@@ -23,7 +23,7 @@ public abstract class Classifier {
 	 * @param record
 	 * @return the predicted class label of the record
 	 */
-	protected abstract int classify(Record record);
+	protected abstract String classify(Record record);
 	
 	/**
 	 * Train the dataset
@@ -43,9 +43,9 @@ public abstract class Classifier {
 			// test each data 
 			for( Record record: testDS )
 			{
-				int predictedLabel = classify(record);
+				String predictedLabel = classify(record);
 				out.println("Predicted: " + predictedLabel + ", Real: " + record.label);
-				if (predictedLabel == record.label)
+				if (predictedLabel.equals(record.label) )
 					correct++;
 			}		
 			out.close();
@@ -89,7 +89,7 @@ public abstract class Classifier {
 				
 				line = br.readLine();
 				words = line.split(" ");
-				int label = new Integer(words[0]);
+				String label = words[0];
 				for (int i=1;i<words.length;i++)
 				{
 					word = words[i];

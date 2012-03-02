@@ -93,12 +93,12 @@ public class LSH extends Classifier{
 	 *  	may possibly be wrong. 
 	 */
 	@Override
-	public int classify(Record rec) {
-		int ret = -1;
+	public String classify(Record rec) {
+		String ret = null;
 		
 		LSHRecord record = new LSHRecord( rec, M );
 		
-		List<Pair<Integer, Double> > candidates = new LinkedList<Pair<Integer, Double> >();
+		List<Pair<String, Double> > candidates = new LinkedList<Pair<String, Double> >();
 		
 		/*
 		 * Querying q. 
@@ -115,7 +115,7 @@ public class LSH extends Classifier{
 			for ( Record neighbor : HT[i].get(hashValue) )
 			{
 				double dist = metric.compute(neighbor, record); 
-				candidates.add( new Pair<Integer, Double>(neighbor.label, dist) );				
+				candidates.add( new Pair<String, Double>(neighbor.label, dist) );				
 			}		
 		}
 		
@@ -127,19 +127,19 @@ public class LSH extends Classifier{
 		Collections.sort(candidates);
 		
 		/* get the most frequent label of the top k records */
-		HashMap<Integer, Integer> stats = new HashMap<Integer, Integer>();
+		HashMap<String, Integer> stats = new HashMap<String, Integer>();
 
 		int arrayLength = Math.min(kValue, candidates.size() );
 		for (int i = 0; i < arrayLength; i++)
 		{
-			int thisLabel = candidates.get(i).key; // thisLabel is the label of current examining record		
+			String thisLabel = candidates.get(i).key; // thisLabel is the label of current examining record		
 			if ( !stats.containsKey(thisLabel) )
 				stats.put(thisLabel, 0);
 			int temp = stats.get( thisLabel ) ;
 			stats.put( thisLabel, temp + 1);
 		}
 		int max = 0;
-		for (Entry<Integer, Integer> entry: stats.entrySet() )
+		for (Entry<String, Integer> entry: stats.entrySet() )
 		{
 			if ( entry.getValue() > max)
 			{
@@ -381,7 +381,7 @@ public class LSH extends Classifier{
 				double[] attributes = new double[d+1];
 				line = br.readLine();
 				words = line.split(" ");
-				int label = new Integer(words[0]);
+				String label = words[0];
 				for (int i=1;i<words.length;i++)
 				{
 					word = words[i];
