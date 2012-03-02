@@ -68,17 +68,21 @@ public class Main {
 			e.printStackTrace();
 			return;
 		}
+		long trainingTime = 0, testingTime = 0;
+		
 		
 		/*
 		 * 1. train 
 		 */
 		System.out.println("Training data...");
+		Main.DEBUG("Training Dataset size: " + classifier.testDS.size());		
 		timeStart = System.currentTimeMillis();
 		classifier.train();
 		timeEnd = System.currentTimeMillis();
-		Main.DEBUG("Time used:(ms): " + (timeEnd - timeStart) );
+		trainingTime = timeEnd - timeStart;
+		Main.DEBUG("Time used:(ms): " + trainingTime );
 		Main.DEBUG("Training Time/record: " + 
-				(double)(timeEnd - timeStart) / classifier.trainDS.size());
+				(double)trainingTime / classifier.trainDS.size());
 		
 		System.out.println();
 		
@@ -87,7 +91,7 @@ public class Main {
 		 */
 		// classifier.createDataset();
 		System.out.println("Testing data...");
-		Main.DEBUG("Training Dataset size: " + classifier.testDS.size());		
+		Main.DEBUG("Testing Dataset size: " + classifier.testDS.size());		
 		timeStart = System.currentTimeMillis();
 		double accuracy = -1;
 		try {
@@ -97,16 +101,14 @@ public class Main {
 			e.printStackTrace();
 		}
 		timeEnd = System.currentTimeMillis();
+		testingTime = timeEnd-timeStart;
 		// report
 		System.out.printf("  Accuracy: %.2f%%\n", accuracy );
-
-		System.out.println("  Time used:(ms): " + (timeEnd - timeStart) );
+		System.out.println("  Time used:(ms): " + testingTime );
+		Main.DEBUG("Training Dataset size: " + classifier.trainDS.size());
 		Main.DEBUG("Testing Time/record: " + 
-				(double)(timeEnd - timeStart) / classifier.trainDS.size());
+				(double)testingTime / classifier.trainDS.size());
 		System.out.println();
-		
-		Main.DEBUG("Training Dataset size: " + classifier.trainDS.size());		
-		
 		
 	}
 
