@@ -73,8 +73,8 @@ public class Main {
 		 * 1. train 
 		 */
 		timeStart = System.currentTimeMillis();
-		Main.DEBUG("Training Dataset size: " + classifier.trainDS.size());		
 		System.out.println("Training data...");
+		Main.DEBUG("Training Dataset size: " + classifier.trainDS.size());		
 		classifier.train();
 		timeEnd = System.currentTimeMillis();
 		Main.DEBUG("Time used:(ms): " + (timeEnd - timeStart) );
@@ -87,8 +87,8 @@ public class Main {
 		 * 2. test 
 		 */
 		// classifier.createDataset();
-		Main.DEBUG("Training Dataset size: " + classifier.testDS.size());		
 		System.out.println("Testing data...");
+		Main.DEBUG("Training Dataset size: " + classifier.testDS.size());		
 		timeStart = System.currentTimeMillis();
 		try {
 			double accuracy = classifier.test();
