@@ -34,7 +34,7 @@ public abstract class Classifier {
 	 * @return the accuracy
 	 */
 	public double test()
-	{		
+	{	
 		int correct = 0; 
 		
 		try {
