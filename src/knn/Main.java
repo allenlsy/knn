@@ -72,9 +72,8 @@ public class Main {
 		/*
 		 * 1. train 
 		 */
-		timeStart = System.currentTimeMillis();
 		System.out.println("Training data...");
-		Main.DEBUG("Training Dataset size: " + classifier.trainDS.size());		
+		timeStart = System.currentTimeMillis();
 		classifier.train();
 		timeEnd = System.currentTimeMillis();
 		Main.DEBUG("Time used:(ms): " + (timeEnd - timeStart) );
@@ -90,19 +89,24 @@ public class Main {
 		System.out.println("Testing data...");
 		Main.DEBUG("Training Dataset size: " + classifier.testDS.size());		
 		timeStart = System.currentTimeMillis();
+		double accuracy = -1;
 		try {
-			double accuracy = classifier.test();
+			accuracy = classifier.test();
 			
-			// report
-			System.out.printf("  Accuracy: %.2f%%\n", accuracy );
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		timeEnd = System.currentTimeMillis();
+		// report
+		System.out.printf("  Accuracy: %.2f%%\n", accuracy );
+
 		System.out.println("  Time used:(ms): " + (timeEnd - timeStart) );
 		Main.DEBUG("Testing Time/record: " + 
 				(double)(timeEnd - timeStart) / classifier.trainDS.size());
 		System.out.println();
+		
+		Main.DEBUG("Training Dataset size: " + classifier.trainDS.size());		
+		
 		
 	}
 
