@@ -60,7 +60,7 @@ public class Main {
 				classifierArgs[i] = args[i+1];			
 			classifier.initialize(classifierArgs);
 			timeEnd = System.currentTimeMillis();
-			Main.DEBUG("Time used:(ms): " + (timeEnd - timeStart) );
+			Main.DEBUG("Time used(ms): " + (timeEnd - timeStart) );
 			System.out.println();
 			
 		} catch (Exception e) {
@@ -80,7 +80,7 @@ public class Main {
 		classifier.train();
 		timeEnd = System.currentTimeMillis();
 		trainingTime = timeEnd - timeStart;
-		Main.DEBUG("Time used:(ms): " + trainingTime );
+		Main.DEBUG("Time used(ms): " + trainingTime );
 		Main.DEBUG("Training Time/record: " + 
 				(double)trainingTime / classifier.trainDS.size());
 		
@@ -103,8 +103,9 @@ public class Main {
 		testingTime = timeEnd-timeStart;
 		// report
 		System.out.printf("  Accuracy: %.2f%%\n", accuracy );
-		System.out.println("  Time used:(ms): " + (testingTime+trainingTime) );
+		System.out.println("  Time used(ms): " + (testingTime+trainingTime) );
 		Main.DEBUG("Testing Dataset size: " + classifier.testDS.size());
+		Main.DEBUG("Time used(ms): " + testingTime);
 		Main.DEBUG("Testing Time/record: " + 
 				(double)testingTime / classifier.testDS.size());
 		System.out.println();
