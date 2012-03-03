@@ -64,6 +64,7 @@ import java.util.Map.Entry;
 
 public class LSH extends Classifier{
 
+	
 	/** max attribute value in the dataset */
 	private int M; 				
 	/** range */ 
@@ -83,8 +84,13 @@ public class LSH extends Classifier{
 	private HashMap<String, LinkedList<Record> > HT[]; 
 									// index starts from 0
 	
-	private List<LSHRecord> trainDS;
+	@Override
+	protected int getTrainDSSize() {
+		return trainDS.size();
+	}
 
+	protected List<LSHRecord> trainDS; // dataset
+	
 	/**
 	 * Querying
 	 * 

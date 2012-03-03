@@ -15,6 +15,8 @@ import java.util.Map.Entry;
  */
 public class KNN extends Classifier{
 		
+	protected List<Record> trainDS; // dataset
+	
 	@Override
 	public String classify(Record record) {
 		String ret = null;
@@ -62,6 +64,11 @@ public class KNN extends Classifier{
 		return ret;
 	}
 	
+	@Override
+	protected int getTrainDSSize() {
+		return trainDS.size();
+	}
+
 	@Override
 	public void train() {
 		missingDataProcessing();		

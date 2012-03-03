@@ -76,14 +76,14 @@ public class Main {
 		 * 1. train 
 		 */
 		System.out.println("Training data...");
-		Main.DEBUG("Training Dataset size: " + classifier.trainDS.size());		
+		Main.DEBUG("Training Dataset size: " + classifier.getTrainDSSize());		
 		timeStart = System.currentTimeMillis();
 		classifier.train();
 		timeEnd = System.currentTimeMillis();
 		trainingTime = timeEnd - timeStart;
 		Main.DEBUG("Time used(ms): " + trainingTime );
 		Main.DEBUG("Training Time/record: " + 
-				(double)trainingTime / classifier.trainDS.size());
+				(double)trainingTime / classifier.getTrainDSSize());
 		
 		System.out.println();
 		

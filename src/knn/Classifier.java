@@ -11,19 +11,23 @@ import java.util.StringTokenizer;
  * The interface of a classification algorithm
  */
 public abstract class Classifier {
-	protected List<Record> trainDS; // dataset
-	protected List<Record> testDS;
 	protected Metric metric = null; // similarity calculation metric
 	protected int kValue; // k value
 	protected int dimension;
+	protected List<Record> testDS;
 	
-
 	/**
 	 * Classify a record
 	 * @param record
 	 * @return the predicted class label of the record
 	 */
 	protected abstract String classify(Record record);
+	
+	/**
+	 * Get training data set size
+	 * @return the training data set size
+	 */
+	protected abstract int getTrainDSSize();
 	
 	/**
 	 * Train the dataset
