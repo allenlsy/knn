@@ -15,13 +15,26 @@ public abstract class Classifier {
 	protected int kValue; // k value
 	protected int dimension;
 	protected List<Record> testDS;
+
+	/** max attribute value in the dataset */
+	protected int M; 	
+	/** dimension of the dataset */
+	protected int d = -1; 
+	/** min label if there exist negative label */
+	protected int minLabel = 0;
+	/** max label */
+	protected int maxLabel = -10000;
+	/** offset added to label to ensure all the labels are positive */
+	protected int labelOffset;
+	/** For scaling up those datasets with very small attribute values */
+	private int scalingValue = 1;
 	
 	/**
 	 * Classify a record
 	 * @param record
 	 * @return the predicted class label of the record
 	 */
-	protected abstract String classify(Record record);
+	protected abstract int classify(Record record);
 	
 	/**
 	 * Get training data set size
@@ -47,9 +60,9 @@ public abstract class Classifier {
 			// test each data 
 			for( Record record: testDS )
 			{
-				String predictedLabel = classify(record);
+				int predictedLabel = classify(record);
 				out.println("Predicted: " + predictedLabel + ", Real: " + record.label);
-				if (predictedLabel.equals(record.label) )
+				if (predictedLabel == record.label )
 					correct++;
 			}		
 			out.close();
@@ -62,7 +75,7 @@ public abstract class Classifier {
 	}
 	
 	/**
-	 * Read a dataset from a file
+	 * Read a normal dataset from a file
 	 * @param fileName the file name of the dataset
 	 * @return List of Record to indicate the whole dataset
 	 */
@@ -71,7 +84,7 @@ public abstract class Classifier {
 		
 		try {
 			/* 1. Get max dimension in the dataset*/
-			int d = getDatasetDimension(fileName); // dimension
+			// int d = getDatasetDimension(fileName); // dimension
 			if (d == -1)
 				throw new Exception("Input file error.\nError in: createDataset().");				
 			
@@ -93,7 +106,7 @@ public abstract class Classifier {
 				
 				line = br.readLine();
 				words = line.split(" ");
-				String label = words[0];
+				int label = Integer.parseInt(words[0]);
 				for (int i=1;i<words.length;i++)
 				{
 					word = words[i];
@@ -113,44 +126,65 @@ public abstract class Classifier {
 		return ret;
 	}
 
+	
 	/**
-	 * Find the dimension of dataset
-	 * @param fileName
-	 * @return the dimension
+	 * Initialize the :	max dimension
+	 * 					max attribute value
+	 * 					label offset
+	 * 					scaling value
+	 * @param filepath
 	 */
-	private int getDatasetDimension(String fileName) {
-		int ret = -1;
-		
+	protected void initializeDataset(String filepath) {
 		try {
-			BufferedReader br = new BufferedReader( new FileReader( fileName ));
+			/** temp M that store the max abs value of attributes */
+			double _M = 0;
+			BufferedReader br = new BufferedReader( new FileReader( filepath ));
 			String[] words = null; // words stores the different parts in one string
 			String word;
-			int index;
+			int index; // data dimension
+			double value; // value of that dimension
 			
 			String line = null;
 			while ( br.ready() )
 			{
 				line = br.readLine();
 				words = line.split(" ");
+				
+				int label=Integer.parseInt(words[0]);
+				minLabel = minLabel > label ? label : minLabel;
+				maxLabel = maxLabel < label ? label : maxLabel;
 				for (int i=1;i<words.length;i++)
 				{
 					word = words[i];
 					StringTokenizer st = new StringTokenizer(word, ":");
-					index = new Integer(st.nextToken());
+					index = Integer.parseInt(st.nextToken());
+					value = Math.abs( Double.parseDouble(st.nextToken()) );
 					
-					ret = ret < index ? index :ret;
+					_M = _M <  value ?  value : _M;
+					d = d < index ? index : d;
 				}
+			}
+			
+			/* Scaling atrribute values */
+			M = (int)(_M+1);
+			if (M<50) 
+			{
+				scalingValue = 1000/M; 
+				M = M * scalingValue;
+			}
+			
+			/* label offset to ensure that all the labels are positive */
+			if (minLabel < 0)
+			{
+				labelOffset = -minLabel;
+				maxLabel += labelOffset;
 			}
 			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		
-		dimension = ret;
-		
-		return ret;
 	}
-
 	
 	/**
 	 * Initialize classifier with arguments

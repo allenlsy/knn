@@ -18,17 +18,17 @@ public class KNN extends Classifier{
 	protected List<Record> trainDS; // dataset
 	
 	@Override
-	public String classify(Record record) {
-		String ret = null;
+	public int classify(Record record) {
+		int ret = 0;
 		/* Compute all the similarities */
 
 		// list<instance id, similarity>, used to store the calculated similarity among 
 		//   the data in the dataset
-		List< Pair<String, Double> > candidates = new LinkedList<Pair<String,Double>>();   
+		List< Pair<Integer, Double> > candidates = new LinkedList<Pair<Integer,Double>>();   
 		for (Record trained : trainDS)
 		{
 			double similarity = metric.compute(trained, record);
-			candidates.add( new Pair<String, Double> (trained.label, similarity) );
+			candidates.add( new Pair<Integer, Double> (trained.label, similarity) );
 		}
 		
 		/* sort the similarities */
@@ -40,19 +40,20 @@ public class KNN extends Classifier{
 		Collections.sort(candidates);
 		
 		/* get the most frequent label of the top k records */
-		HashMap<String, Integer> stats = new HashMap<String, Integer>();
+		/* ORIGINAL ONE USING HASHMAP. IT IS SLOW. 
+		HashMap<Integer, Integer> stats = new HashMap<Integer, Integer>();
 
 		int arrayLength = Math.min(kValue, candidates.size() );
 		for (int i = 0; i < arrayLength; i++)
 		{
-			String thisLabel = candidates.get(i).key; // thisLabel is the label of current examining record		
+			int thisLabel = candidates.get(i).key; // thisLabel is the label of current examining record		
 			if ( !stats.containsKey(thisLabel) )
 				stats.put(thisLabel, 0);
 			int temp = stats.get( thisLabel ) ;
 			stats.put( thisLabel, temp + 1);
 		}
 		int max = 0;
-		for (Entry<String, Integer> entry: stats.entrySet() )
+		for (Entry<Integer, Integer> entry: stats.entrySet() )
 		{
 			if ( entry.getValue() > max)
 			{
@@ -60,8 +61,28 @@ public class KNN extends Classifier{
 				ret = entry.getKey(); 
 			}
 		}
-				
-		return ret;
+		*/
+		
+		int stats[] = new int[maxLabel+1];
+		
+		int arrayLength = kValue < candidates.size() ? kValue :candidates.size();
+		for (int i = 0; i<arrayLength; i++)
+		{
+			int thisLabel = candidates.get(i).key; // this Label is the label of current examining record
+			stats[ thisLabel ]++;
+			
+		}
+		int max = 0;
+		for (int i = 0; i<=maxLabel; i++)
+		{
+			if (stats[i] > max)
+			{
+				max = stats[i];
+				ret = i;
+			}			
+		}
+		
+		return ret-labelOffset;
 	}
 	
 	@Override
@@ -88,7 +109,7 @@ public class KNN extends Classifier{
 		
 		try {
 			/* 1. Get max dimension in the dataset*/
-			int d = getDatasetDimension(fileName); // dimension
+			// int d = getDatasetDimension(fileName); // dimension
 			if (d == -1)
 				throw new Exception("Input file error.\nError in: createDataset().");				
 			
@@ -110,7 +131,7 @@ public class KNN extends Classifier{
 				
 				line = br.readLine();
 				words = line.split(" ");
-				String label = words[0];
+				int label = Integer.parseInt( words[0] );
 				for (int i=1;i<words.length;i++)
 				{
 					word = words[i];
@@ -120,7 +141,7 @@ public class KNN extends Classifier{
 									
 					attributes[index] = value;
 				}
-				ret.add( new Record(label, attributes) );
+				ret.add( new Record(label+labelOffset, attributes) );
 			}
 				
 		} catch (Exception e) {
@@ -130,11 +151,14 @@ public class KNN extends Classifier{
 		return ret;
 	}
 
+	 
+	
 	/**
 	 * Find the dimension of dataset
 	 * @param fileName
 	 * @return the dimension
 	 */
+	/*
 	private int getDatasetDimension(String fileName) {
 		int ret = -1;
 		
@@ -165,11 +189,14 @@ public class KNN extends Classifier{
 		
 		return ret;
 	}
-
+*/
 	public List<Record> getTrainDS() {
 		return trainDS;
 	}
 
+	/**
+	 * Code is almost the same as LSH, except creating normal training and testing datasets
+	 */
 	@Override
 	public void initialize(String[] args) {
 		
@@ -206,7 +233,7 @@ public class KNN extends Classifier{
 		trainDS = createDataset(trainFileName);
 		testDS  = createDataset(testFileName);
 	}
-
+	
 	@Override
 	public void usage() {
 		System.out.println("KNN <train file> <test file> <k value> <metric value>");

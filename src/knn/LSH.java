@@ -65,8 +65,6 @@ import java.util.Map.Entry;
 public class LSH extends Classifier{
 
 	
-	/** max attribute value in the dataset */
-	private int M; 				
 	/** range */ 
 	private double r;	
 	/** approximation */
@@ -75,8 +73,6 @@ public class LSH extends Classifier{
 	private int L;
 	/** number of hash functions in a g function */
 	private int k; 
-	/** dimension of the dataset */
-	private int d; 
 	
 	private double p1;
 	private double p2;
@@ -102,12 +98,12 @@ public class LSH extends Classifier{
 	 *  	may possibly be wrong. 
 	 */
 	@Override
-	public String classify(Record rec) {
-		String ret = null;
+	public int classify(Record rec) {
+		int ret = 0;
 		
 		LSHRecord record = new LSHRecord( rec, M );
 		
-		List<Pair<String, Double> > candidates = new LinkedList<Pair<String, Double> >();
+		List<Pair<Integer, Double> > candidates = new LinkedList<Pair<Integer, Double> >();
 		
 		/*
 		 * Querying q. 
@@ -124,7 +120,7 @@ public class LSH extends Classifier{
 			for ( Record neighbor : HT[i].get(hashValue) )
 			{
 				double dist = metric.compute(neighbor, record); 
-				candidates.add( new Pair<String, Double>(neighbor.label, dist) );				
+				candidates.add( new Pair<Integer, Double>(neighbor.label, dist) );				
 			}		
 		}
 		
@@ -135,13 +131,15 @@ public class LSH extends Classifier{
 		 */
 		Collections.sort(candidates);
 		
-		/* get the most frequent label of the top k records */
+		/* get the most frequent label of the top k records 
+		 * THIS	IS THE ORIGINAL IMPLEMENTATION USING HASHMAP. IT IS SLOW. 
+		
 		HashMap<String, Integer> stats = new HashMap<String, Integer>();
 
 		int arrayLength = Math.min(kValue, candidates.size() );
 		for (int i = 0; i < arrayLength; i++)
 		{
-			String thisLabel = candidates.get(i).key; // thisLabel is the label of current examining record		
+			int thisLabel = candidates.get(i).key; // thisLabel is the label of current examining record		
 			if ( !stats.containsKey(thisLabel) )
 				stats.put(thisLabel, 0);
 			int temp = stats.get( thisLabel ) ;
@@ -156,8 +154,27 @@ public class LSH extends Classifier{
 				ret = entry.getKey(); 
 			}
 		}
+		*/
+		
+		int stats[] = new int[maxLabel + 1];
+		int arrayLength = kValue < candidates.size() ? kValue : candidates.size();
+		for (int i =0;i<arrayLength;i++)
+		{
+			/** the label of current examining record */
+			int thisLabel = candidates.get(i).key; 
+			stats[ thisLabel ] ++ ;
+		}
+		int max = 0;
+		for (int i = 0; i<arrayLength; i++)
+		{
+			if (stats[i] > max)
+			{
+				max = stats[i];
+				ret = i;
+			}			
+		}
 				
-		return ret;
+		return ret - labelOffset;
 	}
 
 	/**
@@ -213,48 +230,8 @@ public class LSH extends Classifier{
 	}
 
 	/**
-	 * Initialize the max dimension and max attribute value
-	 * @param filepath
+	 * Code is almost the same as KNN, except creating LSHRecord data set
 	 */
-	private void initializeDataset(String filepath) {
-		try {
-			/** temp M that store the max abs value of attributes */
-			double _M = 0;
-			BufferedReader br = new BufferedReader( new FileReader( filepath ));
-			String[] words = null; // words stores the different parts in one string
-			String word;
-			int index; // data dimension
-			double value; // value of that dimension
-			
-			String line = null;
-			while ( br.ready() )
-			{
-				line = br.readLine();
-				words = line.split(" ");
-				for (int i=1;i<words.length;i++)
-				{
-					word = words[i];
-					StringTokenizer st = new StringTokenizer(word, ":");
-					index = new Integer(st.nextToken());
-					value = Math.abs( new Double(st.nextToken()) );
-					
-					_M = _M <  value ?  value : _M;
-					d = d < index ? index : d;
-				}
-			}
-			M = (int)(_M+1);
-			if (M<50) 
-			{
-				scalingValue = 1000/M; 
-				M = M * scalingValue;
-			}
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-	}
-
 	// @SuppressWarnings({ "unchecked", "unused" })
 	@SuppressWarnings("unchecked")
 	@Override
@@ -369,11 +346,11 @@ public class LSH extends Classifier{
 	 * @param filepath dataset file path
 	 */
 	private void createLSHDataset(String filepath) {
-		List<LSHRecord> ret = new LinkedList<LSHRecord>();
+		trainDS = new LinkedList<LSHRecord>();
 		
 		try {
-			/* 1. 	Get max dimension in the dataset
-			 * 		Get max attribute value of the dataset
+			/* 1. Initialize internal parameters required for creating dataset
+			 * 		by preprocessing the dataset.
 			 * */
 
 			initializeDataset(filepath);
@@ -398,7 +375,7 @@ public class LSH extends Classifier{
 				double[] attributes = new double[d+1];
 				line = br.readLine();
 				words = line.split(" ");
-				String label = words[0];
+				int label = Integer.parseInt(words[0]);
 				for (int i=1;i<words.length;i++)
 				{
 					word = words[i];
@@ -408,12 +385,10 @@ public class LSH extends Classifier{
 
 					attributes[index] = value;
 				}
-				ret.add( new LSHRecord(label, attributes, M) );
+				trainDS.add( new LSHRecord(label+labelOffset, attributes, M) );
 			}				
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
-		trainDS = ret;		
 	}
 }
