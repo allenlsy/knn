@@ -83,6 +83,9 @@ public class LSH extends Classifier{
 	private LSHFunction[] g; 		// index starts from 0
 	private HashMap<String, LinkedList<Record> > HT[]; 
 									// index starts from 0
+	/** For scaling up those datasets with very small attribute values */
+	private int scalingValue = 1;
+	
 	
 	@Override
 	protected int getTrainDSSize() {
@@ -215,6 +218,8 @@ public class LSH extends Classifier{
 	 */
 	private void initializeDataset(String filepath) {
 		try {
+			/** temp M that store the max abs value of attributes */
+			double _M = 0;
 			BufferedReader br = new BufferedReader( new FileReader( filepath ));
 			String[] words = null; // words stores the different parts in one string
 			String word;
@@ -231,11 +236,17 @@ public class LSH extends Classifier{
 					word = words[i];
 					StringTokenizer st = new StringTokenizer(word, ":");
 					index = new Integer(st.nextToken());
-					value = new Double(st.nextToken());
+					value = Math.abs( new Double(st.nextToken()) );
 					
-					M = M < (int) value ? (int) value : M;
+					_M = _M <  value ?  value : _M;
 					d = d < index ? index : d;
 				}
+			}
+			M = (int)(_M+1);
+			if (M<50) 
+			{
+				scalingValue = 1000/M; 
+				M = M * scalingValue;
 			}
 			
 		} catch (Exception e) {
@@ -393,7 +404,7 @@ public class LSH extends Classifier{
 					word = words[i];
 					StringTokenizer st = new StringTokenizer(word, ":");
 					index = new Integer(st.nextToken());
-					value = new Double(st.nextToken());
+					value = new Double(st.nextToken()) * scalingValue;
 
 					attributes[index] = value;
 				}

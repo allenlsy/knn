@@ -39,10 +39,24 @@ public class LSHRecord extends Record {
 			 * TODO: can be optimized
 			 */
 			int value = (int) d;
-			for (int i = 0; i < value; i++)
-				sb.append('1');
-			for (int i = value; i < M; i++)
-				sb.append('0');
+			if (value>=0)
+			{
+				for (int i = 0; i < value; i++)
+					sb.append('1');
+				for (int i = value; i < M; i++)
+					sb.append('0');
+			}
+			else
+			{
+				value = -value;
+				for (int i = 0; i < value; i++)
+					sb.append('0');
+				for (int i = value; i < M; i++)
+					sb.append('1');
+					
+				
+			}
+		
 		}
 		return sb.toString();
 	}
