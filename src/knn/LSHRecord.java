@@ -53,8 +53,6 @@ public class LSHRecord extends Record {
 					sb.append('0');
 				for (int i = value; i < M; i++)
 					sb.append('1');
-					
-				
 			}
 		
 		}

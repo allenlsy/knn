@@ -20,14 +20,12 @@ public abstract class Classifier {
 	protected int M; 	
 	/** dimension of the dataset */
 	protected int d = -1; 
-	/** min label if there exist negative label */
-	protected int minLabel = 0;
-	/** max label */
-	protected int maxLabel = -10000;
 	/** offset added to label to ensure all the labels are positive */
-	protected int labelOffset;
+	protected int labelOffset = 0;
 	/** For scaling up those datasets with very small attribute values */
-	private int scalingValue = 1;
+	protected int scalingValue = 1;
+	/** number of classes, 0 is not counted as a class, otherwise #labels should increase */
+	protected int classes;
 	
 	/**
 	 * Classify a record
@@ -84,7 +82,6 @@ public abstract class Classifier {
 		
 		try {
 			/* 1. Get max dimension in the dataset*/
-			// int d = getDatasetDimension(fileName); // dimension
 			if (d == -1)
 				throw new Exception("Input file error.\nError in: createDataset().");				
 			
@@ -106,6 +103,8 @@ public abstract class Classifier {
 				
 				line = br.readLine();
 				words = line.split(" ");
+				if (words[0].startsWith("+") )
+					words[0] = words[0].substring(1);
 				int label = Integer.parseInt(words[0]);
 				for (int i=1;i<words.length;i++)
 				{
@@ -116,7 +115,9 @@ public abstract class Classifier {
 									
 					attributes[index] = value;
 				}
-				ret.add( new Record(label, attributes) );
+				ret.add( new Record(label + labelOffset, attributes) );
+				// ret.add( new Record(label, attributes) );
+				
 			}
 				
 		} catch (Exception e) {
@@ -135,6 +136,7 @@ public abstract class Classifier {
 	 * @param filepath
 	 */
 	protected void initializeDataset(String filepath) {
+		int minLabel = 10000, maxLabel = -10000;
 		try {
 			/** temp M that store the max abs value of attributes */
 			double _M = 0;
@@ -150,6 +152,9 @@ public abstract class Classifier {
 				line = br.readLine();
 				words = line.split(" ");
 				
+				
+				if (words[0].startsWith("+") )
+					words[0] = words[0].substring(1);
 				int label=Integer.parseInt(words[0]);
 				minLabel = minLabel > label ? label : minLabel;
 				maxLabel = maxLabel < label ? label : maxLabel;
@@ -166,19 +171,23 @@ public abstract class Classifier {
 			}
 			
 			/* Scaling atrribute values */
-			M = (int)(_M+1);
-			if (M<50) 
-			{
-				scalingValue = 1000/M; 
-				M = M * scalingValue;
-			}
+			M = (int)_M;
 			
 			/* label offset to ensure that all the labels are positive */
-			if (minLabel < 0)
+			if (minLabel <= 0)
 			{
-				labelOffset = -minLabel;
-				maxLabel += labelOffset;
+				labelOffset = -minLabel+1;
+				classes = maxLabel + labelOffset;
 			}
+			else
+				classes = maxLabel;
+			
+			Main.DEBUG("minLabel: " + minLabel);
+			Main.DEBUG("maxLabel: " + maxLabel);
+			Main.DEBUG("labelOffset: " + labelOffset);
+			Main.DEBUG("classes: " + classes);
+			Main.DEBUG("M: " + M);
+			
 			
 		} catch (Exception e) {
 			e.printStackTrace();

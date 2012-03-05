@@ -39,41 +39,16 @@ public class KNN extends Classifier{
 		 */
 		Collections.sort(candidates);
 		
-		/* get the most frequent label of the top k records */
-		/* ORIGINAL ONE USING HASHMAP. IT IS SLOW. 
-		HashMap<Integer, Integer> stats = new HashMap<Integer, Integer>();
-
-		int arrayLength = Math.min(kValue, candidates.size() );
-		for (int i = 0; i < arrayLength; i++)
-		{
-			int thisLabel = candidates.get(i).key; // thisLabel is the label of current examining record		
-			if ( !stats.containsKey(thisLabel) )
-				stats.put(thisLabel, 0);
-			int temp = stats.get( thisLabel ) ;
-			stats.put( thisLabel, temp + 1);
-		}
-		int max = 0;
-		for (Entry<Integer, Integer> entry: stats.entrySet() )
-		{
-			if ( entry.getValue() > max)
-			{
-				max = entry.getValue();
-				ret = entry.getKey(); 
-			}
-		}
-		*/
-		
-		int stats[] = new int[maxLabel+1];
+		int stats[] = new int[classes+1];
 		
 		int arrayLength = kValue < candidates.size() ? kValue :candidates.size();
 		for (int i = 0; i<arrayLength; i++)
 		{
 			int thisLabel = candidates.get(i).key; // this Label is the label of current examining record
-			stats[ thisLabel ]++;
-			
+			stats[ thisLabel ]++;			
 		}
 		int max = 0;
-		for (int i = 0; i<=maxLabel; i++)
+		for (int i = 0; i<= classes; i++)
 		{
 			if (stats[i] > max)
 			{
@@ -82,7 +57,7 @@ public class KNN extends Classifier{
 			}			
 		}
 		
-		return ret-labelOffset;
+		return ret - labelOffset;
 	}
 	
 	@Override
@@ -131,6 +106,8 @@ public class KNN extends Classifier{
 				
 				line = br.readLine();
 				words = line.split(" ");
+				if (words[0].startsWith("+") )
+					words[0] = words[0].substring(1);
 				int label = Integer.parseInt( words[0] );
 				for (int i=1;i<words.length;i++)
 				{
@@ -151,45 +128,6 @@ public class KNN extends Classifier{
 		return ret;
 	}
 
-	 
-	
-	/**
-	 * Find the dimension of dataset
-	 * @param fileName
-	 * @return the dimension
-	 */
-	/*
-	private int getDatasetDimension(String fileName) {
-		int ret = -1;
-		
-		try {
-			BufferedReader br = new BufferedReader( new FileReader( fileName ));
-			String[] words = null; // words stores the different parts in one string
-			String word;
-			int index;
-			
-			String line = null;
-			while ( br.ready() )
-			{
-				line = br.readLine();
-				words = line.split(" ");
-				for (int i=1;i<words.length;i++)
-				{
-					word = words[i];
-					StringTokenizer st = new StringTokenizer(word, ":");
-					index = new Integer(st.nextToken());
-					
-					ret = ret < index ? index :ret;
-				}
-			}
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-		return ret;
-	}
-*/
 	public List<Record> getTrainDS() {
 		return trainDS;
 	}
@@ -230,6 +168,7 @@ public class KNN extends Classifier{
 		/* 
 		 * 2. create train & test datasets
 		 */
+		initializeDataset(trainFileName);
 		trainDS = createDataset(trainFileName);
 		testDS  = createDataset(testFileName);
 	}

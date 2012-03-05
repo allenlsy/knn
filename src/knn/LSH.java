@@ -79,9 +79,6 @@ public class LSH extends Classifier{
 	private LSHFunction[] g; 		// index starts from 0
 	private HashMap<String, LinkedList<Record> > HT[]; 
 									// index starts from 0
-	/** For scaling up those datasets with very small attribute values */
-	private int scalingValue = 1;
-	
 	
 	@Override
 	protected int getTrainDSSize() {
@@ -131,41 +128,15 @@ public class LSH extends Classifier{
 		 */
 		Collections.sort(candidates);
 		
-		/* get the most frequent label of the top k records 
-		 * THIS	IS THE ORIGINAL IMPLEMENTATION USING HASHMAP. IT IS SLOW. 
-		
-		HashMap<String, Integer> stats = new HashMap<String, Integer>();
-
-		int arrayLength = Math.min(kValue, candidates.size() );
-		for (int i = 0; i < arrayLength; i++)
-		{
-			int thisLabel = candidates.get(i).key; // thisLabel is the label of current examining record		
-			if ( !stats.containsKey(thisLabel) )
-				stats.put(thisLabel, 0);
-			int temp = stats.get( thisLabel ) ;
-			stats.put( thisLabel, temp + 1);
-		}
-		int max = 0;
-		for (Entry<String, Integer> entry: stats.entrySet() )
-		{
-			if ( entry.getValue() > max)
-			{
-				max = entry.getValue();
-				ret = entry.getKey(); 
-			}
-		}
-		*/
-		
-		int stats[] = new int[maxLabel + 1];
+		int stats[] = new int[classes + 1];
 		int arrayLength = kValue < candidates.size() ? kValue : candidates.size();
 		for (int i =0;i<arrayLength;i++)
 		{
-			/** the label of current examining record */
 			int thisLabel = candidates.get(i).key; 
 			stats[ thisLabel ] ++ ;
 		}
 		int max = 0;
-		for (int i = 0; i<arrayLength; i++)
+		for (int i = 0; i<=classes; i++)
 		{
 			if (stats[i] > max)
 			{
@@ -173,8 +144,9 @@ public class LSH extends Classifier{
 				ret = i;
 			}			
 		}
-				
+		
 		return ret - labelOffset;
+		// return ret;
 	}
 
 	/**
@@ -353,7 +325,7 @@ public class LSH extends Classifier{
 			 * 		by preprocessing the dataset.
 			 * */
 
-			initializeDataset(filepath);
+			// initializeDataset(filepath);
 			if (d == -1)
 			{
 				System.out.println("Input file error");
@@ -375,6 +347,8 @@ public class LSH extends Classifier{
 				double[] attributes = new double[d+1];
 				line = br.readLine();
 				words = line.split(" ");
+				if (words[0].startsWith("+") )
+					words[0] = words[0].substring(1);
 				int label = Integer.parseInt(words[0]);
 				for (int i=1;i<words.length;i++)
 				{
@@ -385,7 +359,7 @@ public class LSH extends Classifier{
 
 					attributes[index] = value;
 				}
-				trainDS.add( new LSHRecord(label+labelOffset, attributes, M) );
+				trainDS.add( new LSHRecord(label + labelOffset, attributes, M) );
 			}				
 		} catch (Exception e) {
 			e.printStackTrace();
