@@ -59,7 +59,8 @@ public abstract class Classifier {
 			for( Record record: testDS )
 			{
 				int predictedLabel = classify(record);
-				out.println("Predicted: " + predictedLabel + ", Real: " + record.label);
+				out.println("Predicted: " + (predictedLabel-labelOffset) + ", Real: " 
+						+ (record.label-labelOffset) );
 				if (predictedLabel == record.label )
 					correct++;
 			}		
@@ -176,7 +177,7 @@ public abstract class Classifier {
 			/* label offset to ensure that all the labels are positive */
 			if (minLabel <= 0)
 			{
-				labelOffset = -minLabel+1;
+				labelOffset = -minLabel;
 				classes = maxLabel + labelOffset;
 			}
 			else

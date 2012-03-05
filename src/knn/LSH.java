@@ -145,8 +145,8 @@ public class LSH extends Classifier{
 			}			
 		}
 		
-		return ret - labelOffset;
-		// return ret;
+		// return ret - labelOffset;
+		return ret;
 	}
 
 	/**
