@@ -5,8 +5,7 @@ Or, if you are using git, after you configure your git environment, please use t
 
 mkdir knn
 cd knn
-git remote add knn git@github.com:allenlsy/knn.git
-git pull knn master
+git clone git@github.com:allenlsy/knn.git
 
 ----------------------------------------
 This is a eclipse project. You can open the whole project with eclipse using Java project
