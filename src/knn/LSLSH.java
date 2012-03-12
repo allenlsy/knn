@@ -77,7 +77,7 @@ public class LSLSH extends Classifier{
 	private double p1;
 	private double p2;
 	private LSLSHFunction[] g; 		// index starts from 0
-	private HashMap<Integer, LinkedList<Record> > HT[]; 
+	private LinkedList<Record> HT[][]; 
 									// index starts from 0
 	
 	@Override
@@ -112,9 +112,11 @@ public class LSLSH extends Classifier{
 			 * 1) Retrieve the points from the bucket g[j](q) in the j-th hash table
 			 */
 			int hashValue = g[i].hash(record);
+			/*
 			if (!HT[i].containsKey(hashValue))
 				continue;
-			for ( Record neighbor : HT[i].get(hashValue) )
+				*/
+			for ( Record neighbor : HT[i][hashValue] )
 			{
 				double dist = metric.compute(neighbor, record); 
 				candidates.add( new Pair<Integer, Double>(neighbor.label, dist) );				
@@ -175,9 +177,10 @@ public class LSLSH extends Classifier{
 		 * [2]: Since the total number of buckets may be large, we retain only the nonempty buckets by resorting to hashing.
 		 */
 		
-		HT = new HashMap[L];
+		HT = new LinkedList[L][M];
 		for (int i=0; i<L; i++)
-			HT[i] = new HashMap<Integer, LinkedList<Record>>();
+			for (int j=0;j<M;j++)
+				HT[i][j] = new LinkedList<Record>();
 		
 		int hashValue;
 		
@@ -191,11 +194,13 @@ public class LSLSH extends Classifier{
 				// System.out.println("DEBUG: i = " + i);
 				hashValue = g[i].hash(r);
 				
+				/*
 				if (!HT[i].containsKey(hashValue))
 				{
 					HT[i].put(hashValue, new LinkedList<Record>());
 				}
-				HT[i].get(hashValue).add(r);							
+				*/
+				HT[i][hashValue].add(r);							
 			}			
 		}				
 	}
@@ -292,17 +297,17 @@ public class LSLSH extends Classifier{
 				k = new Integer(args[6]);							
 			}
 			
-		HT = new HashMap[L];
+		HT = new LinkedList[L][M];
 		
 		testDS = createDataset(testFileName);		
 	}
 
 	@Override
 	public void usage() {
-		System.out.println("lshMain <train file> <test file> <R-range> <c-approximity>" +
+		System.out.println("lslshMain <train file> <test file> <R-range> <c-approximity>" +
 				" <k-value> <metric value>");
 		System.out.println("OR");
-		System.out.println("lshMain <dataset name> <R-range> <c-approximity>" +
+		System.out.println("lslshMain <dataset name> <R-range> <c-approximity>" +
 				" <k-value> <metric value> [ <k-# hash functions> <L-# LSH functions> ]" +
 				" [ <p1> <p2> ]");
 		System.out.println();

@@ -4,17 +4,19 @@ import java.util.Random;
 
 public class LSLSHFunction implements Hash<LSHRecord, Integer> {
 	private double r[], w;
-	private int d, b ;
+	private int d, b, M ;
 	
 	/**
 	 * Constructor
-	 * @param M The maximum attribute value
-	 * @param d the dimension
+	 * @param _M The maximum attribute value
+	 * @param _d the dimension
 	 */
-	public LSLSHFunction(int M, int d) {
-		r = new double[d];
+	public LSLSHFunction(int _M, int _d) {
+		M = _M;
+		d = _d;
+		r = new double[_d];
 		Random rand = new Random();
-		for (int i = 0; i<d;i++ )
+		for (int i = 0; i<_d;i++ )
 			r[i] = rand.nextGaussian();
 		w = 4;
 		b = rand.nextInt(4);
@@ -29,7 +31,7 @@ public class LSLSHFunction implements Hash<LSHRecord, Integer> {
 			sum += r[i]*input.attributes[i];
 		ret = (int)((sum+b)/w);
 		
-		return ret;
+		return ret % M;
 	}
 
 	
