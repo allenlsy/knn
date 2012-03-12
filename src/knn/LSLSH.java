@@ -349,7 +349,7 @@ public class LSLSH extends Classifier{
 			String line = null;
 			while ( br.ready() )
 			{
-				double[] attributes = new double[d+1];
+				HashMap<Integer, Double> attributes = new HashMap<Integer, Double>();
 				line = br.readLine();
 				words = line.split(" ");
 				if (words[0].startsWith("+") )
@@ -362,9 +362,9 @@ public class LSLSH extends Classifier{
 					index = new Integer(st.nextToken());
 					value = new Double(st.nextToken()) * scalingValue;
 
-					attributes[index] = value;
+					attributes.put(index, value);
 				}
-				trainDS.add( new LSHRecord(label + labelOffset, attributes, M) );
+				trainDS.add( new LSHRecord(label + labelOffset, attributes, M, d) );
 			}				
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -1,5 +1,6 @@
 package knn;
 
+import java.util.Map.Entry;
 import java.util.Random;
 
 public class LSLSHFunction implements Hash<LSHRecord, Integer> {
@@ -27,8 +28,16 @@ public class LSLSHFunction implements Hash<LSHRecord, Integer> {
 		double sum = 0;
 		int ret;
 		
+		/*
 		for (int i = 0 ; i < d ; i++)
 			sum += r[i]*input.attributes[i];
+		*/
+		for (Entry<Integer, Double> entry : input.attributes.entrySet() )
+		{
+			int i = entry.getKey();
+			double value = entry.getValue();
+			sum += r[i]*value;
+		}
 		ret = (int)((sum+b)/w);
         
         if (ret < 0)
