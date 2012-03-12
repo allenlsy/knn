@@ -30,7 +30,10 @@ public class LSLSHFunction implements Hash<LSHRecord, Integer> {
 		for (int i = 0 ; i < d ; i++)
 			sum += r[i]*input.attributes[i];
 		ret = (int)((sum+b)/w);
-		
+        
+        if (ret < 0)
+            ret += M;
+
 		return ret % M;
 	}
 

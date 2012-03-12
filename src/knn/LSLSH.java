@@ -112,6 +112,7 @@ public class LSLSH extends Classifier{
 			 * 1) Retrieve the points from the bucket g[j](q) in the j-th hash table
 			 */
 			int hashValue = g[i].hash(record);
+            Main.DEBUG("M: " + M + "   hash: " + hashValue);
 			/*
 			if (!HT[i].containsKey(hashValue))
 				continue;
@@ -193,7 +194,7 @@ public class LSLSH extends Classifier{
 			{
 				// System.out.println("DEBUG: i = " + i);
 				hashValue = g[i].hash(r);
-				
+		        Main.DEBUG("M: " + M + "  hash: " + hashValue);		
 				/*
 				if (!HT[i].containsKey(hashValue))
 				{
