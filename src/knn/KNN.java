@@ -1,6 +1,7 @@
 package knn;
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -24,12 +25,24 @@ public class KNN extends Classifier{
 
 		// list<instance id, similarity>, used to store the calculated similarity among 
 		//   the data in the dataset
+		/*
 		List< Pair<Integer, Double> > candidates = new LinkedList<Pair<Integer,Double>>();   
 		for (Record trained : trainDS)
 		{
 			double similarity = metric.compute(trained, record);
 			candidates.add( new Pair<Integer, Double> (trained.label, similarity) );
 		}
+		*/
+		
+		@SuppressWarnings("unchecked")
+		Pair<Integer, Double> candidates[] = new Pair[trainDS.size()];
+		for (int i = 0;i<trainDS.size();i++)
+		{
+			Record trained = trainDS.get(i);
+			double similarity = metric.compute(trained, record);
+			candidates[i] = new Pair<Integer, Double> (trained.label, similarity);
+		}
+		
 		
 		/* sort the similarities */
 		/*
@@ -37,14 +50,15 @@ public class KNN extends Classifier{
 		 * 	the point if it is a correct answer (cR-near neighbor for Strategy 1, R-near neighbor 
 		 * 	for Strategy 2).
 		 */
-		Collections.sort(candidates);
+		// Collections.sort(candidates);
+		Arrays.sort(candidates);
 		
 		int stats[] = new int[classes+1];
 		
-		int arrayLength = kValue < candidates.size() ? kValue :candidates.size();
+		int arrayLength = kValue < candidates.length ? kValue :candidates.length;
 		for (int i = 0; i<arrayLength; i++)
 		{
-			int thisLabel = candidates.get(i).key; // this Label is the label of current examining record
+			int thisLabel = candidates[i].key; // this Label is the label of current examining record
 			stats[ thisLabel ]++;			
 		}
 		int max = 0;
