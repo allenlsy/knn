@@ -3,7 +3,13 @@ package knn;
 @SuppressWarnings("rawtypes")
 public class Pair<K,V extends Comparable> implements Comparable< Pair<K,V> >
 {
+	/**
+	 * @uml.property  name="key"
+	 */
 	public K key;
+	/**
+	 * @uml.property  name="value"
+	 */
 	public V value;
 	public Pair(K _key, V _value)
 	{

@@ -3,6 +3,7 @@ package knn;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.PrintWriter;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.StringTokenizer;
@@ -96,7 +97,7 @@ public abstract class Classifier {
 			String line = null;
 			while ( br.ready() )
 			{
-				double[] attributes = new double[d+1];
+				HashMap<Integer, Double> attributes = new HashMap<Integer, Double>();
 				
 				/*
 				 * TODO: empty attribute should be assigned default value.
@@ -114,7 +115,7 @@ public abstract class Classifier {
 					index = new Integer(st.nextToken());
 					value = new Double(st.nextToken());
 									
-					attributes[index] = value;
+					attributes.put(index, value);
 				}
 				ret.add( new Record(label + labelOffset, attributes) );
 				// ret.add( new Record(label, attributes) );

@@ -17,14 +17,21 @@ import java.util.Random;
  *
  */
 
-public class LSHFunction implements Hash<LSHRecord, String>{
+public class LSHFunction implements Hash<LSHRecord, String >{
 
+	/**
+	 * @uml.property  name="h"
+	 * @uml.associationEnd  multiplicity="(0 -1)"
+	 */
 	public Hash<LSHRecord, Integer> h[]; // hash functions of family H, index starts from 0
 	
 	/*
 	 * M:	[2], p120, the maximum attribute value
 	 * 		[1], p520, d'
 	 * 		Here it is Hamming string length
+	 */
+	/**
+	 * @uml.property  name="m"
 	 */
 	private int M;
 	
@@ -38,6 +45,7 @@ public class LSHFunction implements Hash<LSHRecord, String>{
 			h[i] = new HammingHash(rand.nextInt(M));		
 	}
 	
+	@SuppressWarnings("rawtypes")
 	@Override
 	public String hash(LSHRecord input) {
 		// int[] ret = new int[ h.length ];

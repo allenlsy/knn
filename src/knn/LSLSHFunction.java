@@ -32,6 +32,7 @@ public class LSLSHFunction implements Hash<LSHRecord, Integer> {
 		for (int i = 0 ; i < d ; i++)
 			sum += r[i]*input.attributes[i];
 		*/
+		
 		for (Entry<Integer, Double> entry : input.attributes.entrySet() )
 		{
 			int i = entry.getKey();

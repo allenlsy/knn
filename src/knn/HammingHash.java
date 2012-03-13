@@ -17,6 +17,9 @@ package knn;
  */
 public class HammingHash implements Hash<LSHRecord, Integer> {
 
+	/**
+	 * @uml.property  name="position"
+	 */
 	private int position;
 	public HammingHash(int _position)
 	{

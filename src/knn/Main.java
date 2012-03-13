@@ -120,7 +120,7 @@ public class Main {
 		String help = "java knn.Main <classifier name> [ corresponding arguments ] [d]\n\n"
 				+ "Corresponding arguments view be displayed after entering classifier name"+
 				"\n\n" +
-				"classifier name - knn, lsh (case insensitive)\n" +
+				"classifier name - knn, lsh, lslsh (case insensitive)\n" +
 				"d - debug mode\n";
 		System.out.println(help);
 	}
