@@ -3,6 +3,8 @@
  */
 package knn;
 
+import java.util.HashMap;
+
 /**
  * @author allenlsy
  *
@@ -27,7 +29,7 @@ public class LSHRecord extends Record {
 	public LSHRecord(Record rec, int _M) {
 		super(rec.label, rec.attributes);
 		
-		hamming = LSHRecord.hamming(rec.attributes, _M);
+		// hamming = LSHRecord.hamming(rec.attributes, _M);
 	}
 
 	private static String hamming(double[] _data, int M)
