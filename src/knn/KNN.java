@@ -97,8 +97,12 @@ public class KNN extends Classifier{
 			trainFileName = args[0] + ".train.txt";
 			testFileName = args[0] + ".test.txt";
 		}
-		else
-			if (args.length != 4)
+		else if (args.length == 4 ) {
+			argsOffset = 0;
+			trainFileName = args[0];
+			testFileName = args[1];		
+		}
+		else if (args.length != 4)
 			{
 				usage();
 				System.exit(0); 
