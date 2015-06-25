@@ -3,37 +3,43 @@ https://github.com/allenlsy/knn/zipball/master
 
 Or, if you are using git, after you configure your git environment, please use the following commands:
 
+```sh
 mkdir knn
 cd knn
 git clone git@github.com:allenlsy/knn.git
+```
 
 ----------------------------------------
 This is a eclipse project. You can open the whole project with eclipse using Java project
 wizard.
 
 To run the program, please ensure that JDK and JRE is correctly configured on your 
-computer. Then go to the /src/knn directory in command line(in Windows) or terminal(in 
+computer. Then go to the `/src/knn` directory in command line(in Windows) or terminal(in 
 Unix-based OS).
 
-1. To compile the project
+__1. To compile the project__
 
-"javac -d . *.java"
+```sh
+javac -d . *.java
+```
 
 OR
 
-"sh comp"
+```sh
+sh comp
+```
 
+__2. Run__
 
-2. Run 
+Type `java knn.Main` to view the command line help message
 
-Type "java knn.Main" to view the command line help message
-
-3. Report
+__3. Report__
 
 Report is in prediction.txt.
 
-4. Some Examples
+__4. Some Examples__
 
+```sh
 # sh comp
 # java knn.Main
 # java knn.Main knn 
@@ -42,7 +48,7 @@ Report is in prediction.txt.
 # java knn.Main lsh dna 10 10 5 0
 # java knn.Main lsh dna 10 10 5 0 5 5
 # java knn.Main lsh dna 10 10 5 0 5 5 d
-
+```
 
 -----------------------------------------------------------
 For any further information, please email cafe@allenlsy.com   
