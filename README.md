@@ -40,14 +40,14 @@ Report is in prediction.txt.
 __4. Some Examples__
 
 ```sh
-# sh comp
-# java knn.Main
-# java knn.Main knn 
-# java knn.Main knn dna 5 0
-# java knn.Main knn dna.train.txt dna.test.txt 5 0
-# java knn.Main lsh dna 10 10 5 0
-# java knn.Main lsh dna 10 10 5 0 5 5
-# java knn.Main lsh dna 10 10 5 0 5 5 d
+sh comp
+java knn.Main
+java knn.Main knn 
+java knn.Main knn dna 5 0
+java knn.Main knn dna.train.txt dna.test.txt 5 0
+java knn.Main lsh dna 10 10 5 0
+java knn.Main lsh dna 10 10 5 0 5 5
+java knn.Main lsh dna 10 10 5 0 5 5 d
 ```
 
 -----------------------------------------------------------
